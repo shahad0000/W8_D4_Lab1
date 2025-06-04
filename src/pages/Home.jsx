@@ -165,7 +165,7 @@ const Home = () => {
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 m-4">
               {jobs.map((job) => (
-                <div className="w-full h-30 bg-white flex flex-col justify-around items-center">
+                <div key={job.id} className="w-full h-30 bg-white flex flex-col justify-around items-center">
                   <div className="text-3xl">{job.title}</div>
                   <button className="text-blue-400 cursor-pointer">
                     Apply
