@@ -23,7 +23,7 @@ const Admin = () => {
       navigate("/login");
     }
   }, [navigate]);
-  
+
   const handleLogout = () => {
     navigate("/login");
   };
@@ -36,7 +36,7 @@ const Admin = () => {
         newJob
       );
       setJobs([...jobs, newJob]);
-      setNewJob({title: "" })
+      setNewJob({ title: "" });
     } catch (err) {
       console.log(err);
     }
@@ -46,8 +46,7 @@ const Admin = () => {
       const res = await axios.delete(
         `https://683ff5425b39a8039a5641c5.mockapi.io/jobs/${id}`
       );
-      setJobs(jobs.filter(job => job.id !== id));
-
+      setJobs(jobs.filter((job) => job.id !== id));
     } catch (err) {
       console.log(err);
     }
@@ -63,10 +62,10 @@ const Admin = () => {
       console.log(err);
     }
   };
-  
+
   useEffect(() => {
     getJobs();
-  }, []);
+  }, [jobs]);
 
   return (
     <div className="bg-gray-100 font-sans min-h-screen flex flex-col md:flex-row">
@@ -157,7 +156,6 @@ const Admin = () => {
 
         {activeSection === "dashboard" && (
           <div className="space-y-6">
-
             <header>
               <h1 className="text-2xl font-bold text-gray-800">
                 Welcome Back, {username}
@@ -171,7 +169,9 @@ const Admin = () => {
                 <h2 className="text-lg font-semibold text-gray-700">
                   Total Job Listings
                 </h2>
-                <p className="text-2xl font-bold text-green-600">{jobs.length}</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {jobs.length}
+                </p>
               </div>
               <div className="bg-white p-4 rounded-lg shadow-md">
                 <h2 className="text-lg font-semibold text-gray-700">
@@ -188,40 +188,47 @@ const Admin = () => {
             </div>
 
             <div>
-            <form onSubmit={postJob} className="bg-white flex justify-end gap-1 p-2">
-              <input
-                value={newJob.title}
-                onChange={(e) =>
-                  setNewJob((prev) => ({
-                    ...prev,
-                    title: e.target.value,
-                  }))
-                }
-                type="text"
-                className="border border-gray-400 rounded-xl"
-                placeholder="Type a job name"
-              />
-              <button type="submit" className="bg-blue-300 p-2 rounded-md">
-                Post
-              </button>
-            </form>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 m-4">
-              {jobs.map((job) => (
-                <div key={job.id} className="w-full h-30 bg-white flex flex-col justify-around items-center">
-                  <div className="text-3xl">{job.title}</div>
-                  <button
-                    onClick={() => handleDelete(job.id)}
-                    className="text-red-700 cursor-pointer"
+              <form
+                onSubmit={postJob}
+                className="bg-white flex justify-end gap-1 p-2"
+              >
+                <input
+                  value={newJob.title}
+                  onChange={(e) =>
+                    setNewJob((prev) => ({
+                      ...prev,
+                      title: e.target.value,
+                    }))
+                  }
+                  type="text"
+                  className="border border-gray-400 rounded-xl"
+                  placeholder="Type a job name"
+                />
+                <button type="submit" className="bg-blue-300 p-2 rounded-md">
+                  Post
+                </button>
+              </form>
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 m-4">
+                {jobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="w-full h-30 bg-white flex flex-col justify-around items-center"
                   >
-                    Delete
-                  </button>
-                </div>
-              ))}
+                    <div className="text-3xl">{job.title}</div>
+                    <div className="flex justify-end px-9 w-full">
+                      <button
+                        onClick={() => handleDelete(job.id)}
+                        className="text-red-700 cursor-pointer  w-fit"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-          </div>
         )}
-
       </main>
     </div>
   );
