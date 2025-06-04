@@ -1,0 +1,120 @@
+import React, { useState } from "react";
+import { Link } from "react-router";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
+localStorage.clear()
+const Login = () => {
+  const [creds, setCreds] = useState({
+    username: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCreds((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const getRes = await axios.get(
+        "https://683ff5425b39a8039a5641c5.mockapi.io/users"
+      );
+      const userExist = getRes.data.find(
+        (user) => user.username === creds.username && user.password === creds.password
+      );
+      if (userExist) {
+       localStorage.setItem("loggedIn", "true");
+       localStorage.setItem("username", creds.username);
+       localStorage.setItem("type", userExist.type)
+       userExist.type === "admin" ?   navigate("/admin") : navigate("/");
+      } else {
+        Swal.fire({
+            icon: "error",
+            title: "Username or password is incorrect"
+        })
+      }
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return (
+    <div>
+      <div className="bg-blue-50 flex items-center justify-center min-h-screen">
+        <div className="bg-white p-10 rounded-lg shadow-lg w-full max-w-lg">
+          <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">
+            Sign in to your Account
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-5">
+              <label
+                htmlFor="name"
+                className="block text-gray-700 font-medium mb-2"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={creds.username}
+                onChange={handleChange}
+                placeholder="Enter a username"
+                autoComplete="username"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="mb-5">
+              <label
+                htmlFor="password"
+                className="block text-gray-700 font-medium mb-2"
+              >
+                Password
+              </label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={creds.password}
+                onChange={handleChange}
+                autoComplete="current-password"
+                placeholder="Enter a password"
+                className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="flex items-center mb-5">
+              <input type="checkbox" id="terms" name="terms" className="mr-2" />
+              <label htmlFor="terms" className="text-gray-700">
+                I agree to the
+                <a href="#" className="text-blue-500 hover:underline">
+                  terms and conditions
+                </a>
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition duration-300"
+            >
+              Sign in
+            </button>
+          </form>
+          <p className="mt-6 text-center text-gray-600">
+            Already have an account?
+            <Link to="/signUp" className="text-blue-500 hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
